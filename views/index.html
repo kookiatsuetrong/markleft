@@ -1,0 +1,85 @@
+<!doctype html>
+<html>
+	<head>
+		<meta charset='utf-8' />
+		<meta name='viewport' content='width=device-width initial-scale=1' />
+		<title>Mark Left</title>
+		<link rel='stylesheet' href='/css/bootstrap.css' />
+
+		<style>
+			body {
+				color: #333;
+			}
+			p {
+				font-size: 1.25rem;
+			}
+			img {
+				max-width: 100%;
+			}
+			m {
+				font-family: monospace;
+				font-size:1.4rem;
+			}
+			code {
+				padding: 4px;
+			}
+			pre {
+				font-size: 1.1rem;
+				padding: 0.5rem;
+				border: 2px solid #ddd;
+			}
+		</style>
+	</head>
+	<body>
+		<%
+			// TODO: Add renderText(), renderHTML()
+			var line = content.split('\n')
+			for (var i = 0; i < line.length; i++) {
+				if (line[i].trim() == '') {
+					line[i] = '</p><p>'
+				}
+				if (line[i] == '---') {
+					line[i] = '<hr/>'
+				}
+				if (line[i].startsWith('# ')) {
+					line[i] = '<h1>' + line[i].substring(2) + '</h1>'
+				}
+				if (line[i].startsWith('## ')) {
+					line[i] = '<h2>' + line[i].substring(3) + '</h2>'
+				}
+				if (line[i].startsWith('### ')) {
+					line[i] = '<h3>' + line[i].substring(4) + '</h3>'
+				}
+				if (line[i].startsWith('#image ')) {
+					line[i] = '<image src="' + line[i].substring(7) + '" />'
+				}
+				if (line[i].startsWith('#style ')) {
+					line[i] = '<style>' + line[i].substring(7) + '</style>'
+				}
+			}
+			content = line.join('\n')
+			content = content.replace(/\\/g, '<br/>')
+			var first = content.indexOf('</p>')
+			var second = content.indexOf('<p>')
+			if (first < second) {
+				content = content.substring(0, first) +
+							content.substring(first + 4)
+			}
+			first = content.lastIndexOf('</p>')
+			second = content.lastIndexOf('<p>')
+			if (first < second) {
+				content = content.substring(0, second) +
+							content.substring(second + 4)
+			}
+		%>
+		<div class='container'>
+			<div class='row'>
+				<div class='col'></div>
+				<div class='col-12 col-lg-8'>
+					<%- content %>
+				</div>
+				<div class='col'></div>
+			</div>
+		</div>
+	</body>
+</html>
